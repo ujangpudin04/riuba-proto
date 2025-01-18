@@ -61,6 +61,7 @@ message GetUserRequest{
     string user_id = 1 [json_name = "user_id"];
 }
 
+
 message GetListUserResponse{
     repeated User users = 1;
 }
@@ -79,7 +80,7 @@ service UserService{
     rpc Register (RegisterRequest) returns (RegisterResponse);
     rpc Login (LoginRequest) returns (UserResponse);
     rpc GetUser (GetUserRequest) returns (UserResponse);
-    rpc GetListUser (GetListUserRequest) returns (GetListUserResponse);
+    rpc GetListUser () returns (GetListUserResponse);
     rpc UpdateUser (UpdateUserRequest) returns (UserResponse);  
     rpc DeleteUser (GetUserRequest) returns (UserResponse);
 }
