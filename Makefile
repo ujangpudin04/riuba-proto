@@ -10,6 +10,10 @@ else
 	mkdir -p ./protogen/go
 endif
 
+# .PHONY: tidy
+# tidy:
+# 	go mod tidy
+
 
 .PHONY: protoc-go
 protoc-go:
@@ -21,6 +25,7 @@ protoc-go:
 
 .PHONY: build
 build: clean protoc-go
+# build: clean protoc-go tidy
 
 
 .PHONY: pipeline-init
