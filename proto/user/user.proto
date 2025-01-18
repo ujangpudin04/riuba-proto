@@ -25,9 +25,9 @@ message User {
     google.protobuf.Timestamp updated_at=12 [json_name = "updated_at"];
     google.protobuf.Timestamp deleted_at=13 [json_name = "deleted_at"];
 
-    google.protobuf.Timestamp last_login_timestamp = 23 
+    google.protobuf.Timestamp last_login_timestamp = 24
     [json_name="last_login_timestamp"];
-    google.type.Date birth_date=24 [json_name="birth_date"];
+    google.type.Date birth_date=25 [json_name="birth_date"];
 }
 
 message RegisterRequest {        
