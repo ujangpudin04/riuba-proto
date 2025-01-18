@@ -1,0 +1,11 @@
+type: google.api.Service
+config_version: 3
+
+http:
+  rules:
+    - selector: user.UserService.Register
+      post: /user/v1/register
+      body: "*"
+    - selector: user.UserService.Login
+      post: /user/v1/login
+      body: "*"

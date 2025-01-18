@@ -1,0 +1,86 @@
+syntax="proto3";
+
+package user;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+import "proto/google/type/date.proto";
+
+
+option go_package = "github.com/ujangpudin04/riuba-proto/protogen/user";
+
+message User{
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    uint32 no_handphone = 5 [json_name = "no_handphone"];
+    google.protobuf.Any address=6;
+    string status=7;
+    string role=8;
+    string token=9;
+    string otp=10;
+    google.protobuf.Timestamp created_at=11 [json_name = "created_at"];
+    google.protobuf.Timestamp updated_at=12 [json_name = "updated_at"];
+    google.protobuf.Timestamp deleted_at=13 [json_name = "deleted_at"];
+
+    google.protobuf.Timestamp last_login_timestamp = 23 
+    [json_name="last_login_timestamp"];
+    google.type.Date birth_date=24 [json_name="birth_date"];
+}
+
+message RegisterRequest{        
+    string name = 1;
+    string email = 2;
+    string no_handphone = 3 [json_name = "no_handphone"];
+    string password = 4;
+    string re_password = 5 [json_name = "re_password"];
+}
+
+message RegisterResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message LoginRequest{
+    string email = 1;
+    string password = 2;
+}
+
+message UserResponse{
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    string status=5;
+    string role=6;
+    string token=7;
+}
+
+message GetUserRequest{
+    string user_id = 1 [json_name = "user_id"];
+}
+
+message GetListUserResponse{
+    repeated User users = 1;
+}
+
+
+message UpdateUserRequest{
+    string name = 1;
+    string email = 2;
+    string password = 3;
+    uint32 no_handphone = 4 [json_name = "no_handphone"];
+    google.protobuf.Any address=7;
+}
+
+
+service UserService{
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc Login (LoginRequest) returns (UserResponse);
+    rpc GetUser (GetUserRequest) returns (UserResponse);
+    rpc GetListUser (GetListUserRequest) returns (GetListUserResponse);
+    rpc UpdateUser (UpdateUserRequest) returns (UserResponse);  
+    rpc DeleteUser (GetUserRequest) returns (UserResponse);
+}
+

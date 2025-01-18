@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package hello;
+
+option go_package="github.com/ujangpudin04/riuba-proto/protogen/hello";
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloResponse {
+    string greet = 1;
+}
+
+service HelloService {
+    rpc sayHello(HelloRequest) returns (HelloResponse) {};
+}

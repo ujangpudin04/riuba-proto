@@ -1,0 +1,90 @@
+openapiOptions:
+  service:
+    - service: user.UserService
+      option:
+        description: "Documentation for user service"
+  method:
+    - method: user.UserService.Register
+      option:
+        summary: "Register User"
+        description: "To Add User"
+        responses:
+          "200":
+            description: "Return register request"
+          "400":
+            description: "Returned when account is exists"
+    - method: user.UserService.Login
+      option:
+        summary: "Access the App"
+        description: "To Access the App with token"
+        responses:
+          "200":
+            description: "Return User"
+          "400":
+            description: "Returned when given currency pair is not exists"
+  message:
+    - message: user.RegisterRequest
+      option:
+        json_schema:
+          description: "Description for RegisterRequest"
+    - message: user.LoginRequest
+      option:
+        json_schema:
+          description: "Description for RegisterResponse"
+    - message: user.LoginRequest
+      option:
+        json_schema:
+          description: "Description for LoginRequest"
+  field:
+    - field: user.RegisterRequest.name
+      option:
+        description: "Name of user"
+    - field: user.RegisterRequest.email
+      option:
+        description: "Email of user"
+    - field: user.RegisterRequest.no_handphone
+      option:
+        description: "No Handphone of user"
+    - field: user.RegisterRequest.password
+      option:
+        description: "Password of user"
+    - field: user.RegisterRequest.re_password
+      option:
+        description: "Enter Re-Password of user for checking password before submit"
+    - field: user.RegisterResponse.success
+      option:
+        description: "Return true if success"
+        example: "true"
+    - field: user.RegisterResponse.message
+      option:
+        description: "Message if success"
+    - field: user.LoginRequest.email
+      option:
+        description: "Email of user to login when register before"
+    - field: user.LoginRequest.password
+      option:
+        description: "Password of user to login when register before"
+    - field: user.UserResponse.id
+      option:
+        description: "User id from user"
+    - field: user.UserResponse.name
+      option:
+        description: "User name from user"
+    - field: user.UserResponse.email
+      option:
+        description: "User email from user"
+    - field: user.UserResponse.no_handphone
+      option:
+        description: "User no handphone from user"
+    - field: user.UserResponse.password
+      option:
+        description: "User password from user"
+    - field: user.UserResponse.status
+      option:
+        description: "User status from user"
+    - field: user.UserResponse.role
+      option:
+        description: "User role from user"
+    - field: user.UserResponse.token
+      option:
+        description: "User token from user"

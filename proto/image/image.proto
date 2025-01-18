@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package image;
+
+option go_package="github.com/ujangpudin04/riuba-proto/protogen/image";
+
+message Image {
+    string id = 1;
+    string name = 2;
+    string url = 3;
+    string user_id = 4 [json_name = "user_id"];
+    google.protobuf.Timestamp created_at = 5 [json_name = "created_at"];
+    google.protobuf.Timestamp updated_at = 6 [json_name = "updated_at"];
+    google.protobuf.Timestamp deleted_at = 7 [json_name = "deleted_at"];   
+}
+
+message CreateImageRequest {
+    string name = 1;
+    string url = 2;
+    string user_id = 3 [json_name = "user_id"];
+}
+
+message CreateImageResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GetImageRequest {
+    string user_id = 1 [json_name = "user_id"];
+}
+
+message ImageResponse {
+    string id = 1;
+    string name = 2;
+    string url = 3;
+    string user_id = 4 [json_name = "user_id"];
+}
+
+
+message UpdateImageRequest {
+    string name = 1;
+    string url = 2;
+    string user_id = 3 [json_name = "user_id"];
+}
+
+service ImageService {
+    rpc CreateImage (CreateImageRequest) returns (CreateImageResponse);
+    rpc GetImage (GetImageRequest) returns (ImageResponse);
+    rpc UpdateImage (UpdateImageRequest) returns (ImageResponse);
+}
