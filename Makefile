@@ -89,3 +89,11 @@ pipeline-init-gateway:
 
 .PHONY: pipeline-build-gateway
 pipeline-build-gateway: pipeline-init-gateway build-gateway protoc-openapiv2-gateway
+
+.PHONY: validate-paths
+validate-paths:
+	@test -d ./proto/hello || echo "Directory proto/hello is missing!"
+	@test -d ./proto/user || echo "Directory proto/user is missing!"
+	@test -d ./proto/image || echo "Directory proto/image is missing!"
+	@test -f ./grpc-gateway/config.yml || echo "grpc-gateway/config.yml is missing!"
+	@test -f ./grpc-gateway/config-openapi.yml || echo "grpc-gateway/config-openapi.yml is missing!"

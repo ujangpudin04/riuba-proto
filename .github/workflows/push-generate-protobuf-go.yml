@@ -26,6 +26,9 @@ jobs:
         shell: bash
         run: |
           make pipeline-build
+      -name: Debug Path
+        shel: bash
+        run: make validate-paths
       - name: Generate Go Gateway source
         shell: bash
         run: |
