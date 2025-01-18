@@ -73,9 +73,6 @@ openapiOptions:
     - field: user.UserResponse.email
       option:
         description: "User email from user"
-    - field: user.UserResponse.no_handphone
-      option:
-        description: "User no handphone from user"
     - field: user.UserResponse.password
       option:
         description: "User password from user"
