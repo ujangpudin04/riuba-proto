@@ -6,6 +6,7 @@ option go_package="github.com/ujangpudin04/riuba-proto/protogen/hello";
 
 message HelloRequest {
     string name = 1;
+    uint32 age =16;
 }
 
 message HelloResponse {
