@@ -83,7 +83,7 @@ protoc-openapiv2-gateway:
 	--openapiv2_opt merge_file_name=merged \
   	./proto/hello/*.proto \
 	./proto/user/*.proto \
-	./proto/image/*.proto
+	./proto/image/*.proto \
 	./proto/bank/*.proto \
 	./proto/bank/type/*.proto \
 
