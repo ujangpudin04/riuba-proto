@@ -22,6 +22,8 @@ protoc-go:
 	./proto/hello/*.proto \
 	./proto/user/*.proto \
 	./proto/image/*.proto \
+	./proto/bank/*.proto \
+	./proto/bank/type/*.proto \
 
 .PHONY: build
 build: clean protoc-go
@@ -64,7 +66,9 @@ protoc-go-gateway:
 	--grpc-gateway_opt generate_unbound_methods=true \
 	./proto/hello/*.proto \
 	./proto/user/*.proto \
-	./proto/image/*.proto
+	./proto/image/*.proto \
+	./proto/bank/*.proto \
+	./proto/bank/type/*.proto \
 
 
 .PHONY: protoc-openapiv2-gateway
@@ -80,6 +84,8 @@ protoc-openapiv2-gateway:
   	./proto/hello/*.proto \
 	./proto/user/*.proto \
 	./proto/image/*.proto
+	./proto/bank/*.proto \
+	./proto/bank/type/*.proto \
 
 
 .PHONY: build-gateway
