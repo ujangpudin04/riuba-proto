@@ -7,11 +7,32 @@ tags:
   - name: UserService
     description: Documentation for user service
   - name: ImageService
+  - name: BankService
 consumes:
   - application/json
 produces:
   - application/json
 paths:
+  /bank.BankService/GetCurrentBalance:
+    post:
+      operationId: BankService_GetCurrentBalance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/bankCurrentBalanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/bankCurrentBalanceRequest'
+      tags:
+        - BankService
   /hello.HelloService/SayHello:
     post:
       operationId: HelloService_SayHello
@@ -300,6 +321,19 @@ paths:
       tags:
         - UserService
 definitions:
+  bankCurrentBalanceRequest:
+    type: object
+    properties:
+      account_number:
+        type: string
+  bankCurrentBalanceResponse:
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+      current_date:
+        $ref: '#/definitions/typeDate'
   helloHelloRequest:
     type: object
     properties:
