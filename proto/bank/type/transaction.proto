@@ -1,27 +1,27 @@
-syntax = "proto3";
+syntax ="proto3";
 
 package bank;
 
 import "proto/google/type/date.proto";
-import "proto/goole/type/datetime.proto";
+import "proto/google/type/datetime.proto";
 
 option go_package="github.com/ujangpudin04/riuba-proto/protogen/bank";
 
 enum TransactionType {
-    TRANSACTION_TYPE_UNSPECIFIED=0;
-    TRANSACTION_TYPE_IN=1;
-    TRANSACTION_TYPE_OUT=2;
+    TRANSACTION_TYPE_UNSPECIFIED= 0;
+    TRANSACTION_TYPE_IN= 1;
+    TRANSACTION_TYPE_OUT= 2;
 }
 
-message Transaction {
+message Transaction{
     string account_number =1[json_name="account_number"];
     TransactionType type=2;
     double amount=3;
-    google.type.Datetime timestamp=4;
+    google.type.DateTime timestamp=4;
     string notes=16;
 }
 
-message TransactionSummary {
+message TransactionSummary{
     string account_number=1 [json_name="account_number"];
     double sum_amount_in=2 [json_name="sum_amount_in"];
     double sum_amount_out=3 [json_name="sum_amount_out"];
