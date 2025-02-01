@@ -60,6 +60,26 @@ func local_request_BankService_GetCurrentBalance_0(ctx context.Context, marshale
 	return msg, metadata, err
 }
 
+func request_BankService_FetchExchangeRates_0(ctx context.Context, marshaler runtime.Marshaler, client extBank.BankServiceClient, req *http.Request, pathParams map[string]string) (extBank.BankService_FetchExchangeRatesClient, runtime.ServerMetadata, error) {
+	var (
+		protoReq extBank.ExchangeRateRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	stream, err := client.FetchExchangeRates(ctx, &protoReq)
+	if err != nil {
+		return nil, metadata, err
+	}
+	header, err := stream.Header()
+	if err != nil {
+		return nil, metadata, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, nil
+}
+
 // RegisterBankServiceHandlerServer registers the http handlers for service BankService to "mux".
 // UnaryRPC     :call BankServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -85,6 +105,13 @@ func RegisterBankServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 			return
 		}
 		forward_BankService_GetCurrentBalance_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+
+	mux.Handle(http.MethodPost, pattern_BankService_FetchExchangeRates_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
 	})
 
 	return nil
@@ -143,13 +170,32 @@ func RegisterBankServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		}
 		forward_BankService_GetCurrentBalance_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_BankService_FetchExchangeRates_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/bank.BankService/FetchExchangeRates", runtime.WithHTTPPathPattern("/bank.BankService/FetchExchangeRates"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_BankService_FetchExchangeRates_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_BankService_FetchExchangeRates_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
 var (
-	pattern_BankService_GetCurrentBalance_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "GetCurrentBalance"}, ""))
+	pattern_BankService_GetCurrentBalance_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "GetCurrentBalance"}, ""))
+	pattern_BankService_FetchExchangeRates_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "FetchExchangeRates"}, ""))
 )
 
 var (
-	forward_BankService_GetCurrentBalance_0 = runtime.ForwardResponseMessage
+	forward_BankService_GetCurrentBalance_0  = runtime.ForwardResponseMessage
+	forward_BankService_FetchExchangeRates_0 = runtime.ForwardResponseStream
 )
