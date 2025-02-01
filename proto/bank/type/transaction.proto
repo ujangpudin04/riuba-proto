@@ -13,7 +13,7 @@ enum TransactionType {
     TRANSACTION_TYPE_OUT=2;
 }
 
-message Transaction {
+message Transaction{
     string account_number =1[json_name="account_number"];
     TransactionType type=2;
     double amount=3;
@@ -21,7 +21,7 @@ message Transaction {
     string notes=16;
 }
 
-message TransactionSummary {
+message TransactionSummary{
     string account_number=1 [json_name="account_number"];
     double sum_amount_in=2 [json_name="sum_amount_in"];
     double sum_amount_out=3 [json_name="sum_amount_out"];
