@@ -8,9 +8,9 @@ import "proto/google/type/datetime.proto";
 option go_package="github.com/ujangpudin04/riuba-proto/protogen/bank";
 
 enum TransactionType {
-    TRANSACTION_TYPE_UNSPECIFIED=0;
-    TRANSACTION_TYPE_IN=1;
-    TRANSACTION_TYPE_OUT=2;
+    TRANSACTION_TYPE_UNSPECIFIED= 0;
+    TRANSACTION_TYPE_IN= 1;
+    TRANSACTION_TYPE_OUT= 2;
 }
 
 message Transaction{
