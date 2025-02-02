@@ -121,6 +121,53 @@ func request_BankService_SummarizeTransactions_0(ctx context.Context, marshaler 
 	return msg, metadata, err
 }
 
+func request_BankService_TransferMultiple_0(ctx context.Context, marshaler runtime.Marshaler, client extBank.BankServiceClient, req *http.Request, pathParams map[string]string) (extBank.BankService_TransferMultipleClient, runtime.ServerMetadata, chan error, error) {
+	var metadata runtime.ServerMetadata
+	errChan := make(chan error, 1)
+	stream, err := client.TransferMultiple(ctx)
+	if err != nil {
+		grpclog.Errorf("Failed to start streaming: %v", err)
+		close(errChan)
+		return nil, metadata, errChan, err
+	}
+	dec := marshaler.NewDecoder(req.Body)
+	handleSend := func() error {
+		var protoReq extBank.TransferRequest
+		err := dec.Decode(&protoReq)
+		if errors.Is(err, io.EOF) {
+			return err
+		}
+		if err != nil {
+			grpclog.Errorf("Failed to decode request: %v", err)
+			return status.Errorf(codes.InvalidArgument, "Failed to decode request: %v", err)
+		}
+		if err := stream.Send(&protoReq); err != nil {
+			grpclog.Errorf("Failed to send request: %v", err)
+			return err
+		}
+		return nil
+	}
+	go func() {
+		defer close(errChan)
+		for {
+			if err := handleSend(); err != nil {
+				errChan <- err
+				break
+			}
+		}
+		if err := stream.CloseSend(); err != nil {
+			grpclog.Errorf("Failed to terminate client stream: %v", err)
+		}
+	}()
+	header, err := stream.Header()
+	if err != nil {
+		grpclog.Errorf("Failed to get header from client: %v", err)
+		return nil, metadata, errChan, err
+	}
+	metadata.HeaderMD = header
+	return stream, metadata, errChan, nil
+}
+
 // RegisterBankServiceHandlerServer registers the http handlers for service BankService to "mux".
 // UnaryRPC     :call BankServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -156,6 +203,13 @@ func RegisterBankServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 	})
 
 	mux.Handle(http.MethodPost, pattern_BankService_SummarizeTransactions_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
+		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+		return
+	})
+
+	mux.Handle(http.MethodPost, pattern_BankService_TransferMultiple_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
 		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -252,6 +306,31 @@ func RegisterBankServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		}
 		forward_BankService_SummarizeTransactions_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_BankService_TransferMultiple_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/bank.BankService/TransferMultiple", runtime.WithHTTPPathPattern("/bank.BankService/TransferMultiple"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		resp, md, reqErrChan, err := request_BankService_TransferMultiple_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		go func() {
+			for err := range reqErrChan {
+				if err != nil && !errors.Is(err, io.EOF) {
+					runtime.HTTPStreamError(annotatedContext, mux, outboundMarshaler, w, req, err)
+				}
+			}
+		}()
+		forward_BankService_TransferMultiple_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
@@ -259,10 +338,12 @@ var (
 	pattern_BankService_GetCurrentBalance_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "GetCurrentBalance"}, ""))
 	pattern_BankService_FetchExchangeRates_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "FetchExchangeRates"}, ""))
 	pattern_BankService_SummarizeTransactions_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "SummarizeTransactions"}, ""))
+	pattern_BankService_TransferMultiple_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"bank.BankService", "TransferMultiple"}, ""))
 )
 
 var (
 	forward_BankService_GetCurrentBalance_0     = runtime.ForwardResponseMessage
 	forward_BankService_FetchExchangeRates_0    = runtime.ForwardResponseStream
 	forward_BankService_SummarizeTransactions_0 = runtime.ForwardResponseMessage
+	forward_BankService_TransferMultiple_0      = runtime.ForwardResponseStream
 )

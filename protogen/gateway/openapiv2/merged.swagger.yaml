@@ -80,6 +80,33 @@ paths:
             $ref: '#/definitions/bankTransaction'
       tags:
         - BankService
+  /bank.BankService/TransferMultiple:
+    post:
+      operationId: BankService_TransferMultiple
+      responses:
+        "200":
+          description: A successful response.(streaming responses)
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/bankTransferResponse'
+              error:
+                $ref: '#/definitions/rpcStatus'
+            title: Stream result of bankTransferResponse
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          description: ' (streaming inputs)'
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/bankTransferRequest'
+      tags:
+        - BankService
   /hello.HelloService/SayHello:
     post:
       operationId: HelloService_SayHello
@@ -437,6 +464,41 @@ definitions:
       - TRANSACTION_TYPE_IN
       - TRANSACTION_TYPE_OUT
     default: TRANSACTION_TYPE_UNSPECIFIED
+  bankTransferRequest:
+    type: object
+    properties:
+      from_account_number:
+        type: string
+      to_account_number:
+        type: string
+      currency:
+        type: string
+      amount:
+        type: number
+        format: double
+  bankTransferResponse:
+    type: object
+    properties:
+      from_account_number:
+        type: string
+      to_account_number:
+        type: string
+      currency:
+        type: string
+      amount:
+        type: number
+        format: double
+      status:
+        $ref: '#/definitions/bankTransferStatus'
+      timestamp:
+        $ref: '#/definitions/typeDateTime'
+  bankTransferStatus:
+    type: string
+    enum:
+      - TRANSFER_STATUS_UNSPECIFIED
+      - TRANSFER_STATUS_SUCCESS
+      - TRANSFER_STATUS_FAILED
+    default: TRANSFER_STATUS_UNSPECIFIED
   helloHelloRequest:
     type: object
     properties:
