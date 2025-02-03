@@ -13,6 +13,26 @@ consumes:
 produces:
   - application/json
 paths:
+  /bank.BankService/CreateAccount:
+    post:
+      operationId: BankService_CreateAccount
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/bankCreateAccountResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/bankCreateAccountRequest'
+      tags:
+        - BankService
   /bank.BankService/FetchExchangeRates:
     post:
       operationId: BankService_FetchExchangeRates
@@ -395,6 +415,21 @@ paths:
       tags:
         - UserService
 definitions:
+  bankCreateAccountRequest:
+    type: object
+    properties:
+      account_name:
+        type: string
+      currency:
+        type: string
+      initial_deposite_amount:
+        type: number
+        format: double
+  bankCreateAccountResponse:
+    type: object
+    properties:
+      account_uuid:
+        type: string
   bankCurrentBalanceRequest:
     type: object
     properties:
