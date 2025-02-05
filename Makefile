@@ -24,6 +24,7 @@ protoc-go:
 	./proto/image/*.proto \
 	./proto/bank/*.proto \
 	./proto/bank/type/*.proto \
+	./proto/resiliency/*.proto \
 
 .PHONY: build
 build: clean protoc-go
@@ -69,6 +70,7 @@ protoc-go-gateway:
 	./proto/image/*.proto \
 	./proto/bank/*.proto \
 	./proto/bank/type/*.proto \
+	./proto/resiliency/*.proto \
 
 
 .PHONY: protoc-openapiv2-gateway
@@ -86,6 +88,7 @@ protoc-openapiv2-gateway:
 	./proto/image/*.proto \
 	./proto/bank/*.proto \
 	./proto/bank/type/*.proto \
+	./proto/resiliency/*.proto \
 
 
 .PHONY: build-gateway
