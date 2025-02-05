@@ -8,6 +8,7 @@ tags:
     description: Documentation for user service
   - name: ImageService
   - name: BankService
+  - name: ResiliencyService
 consumes:
   - application/json
 produces:
@@ -281,6 +282,100 @@ paths:
             $ref: '#/definitions/imageUpdateImageRequest'
       tags:
         - ImageService
+  /resiliency.ResiliencyService/BiDirectionalResiliency:
+    post:
+      operationId: ResiliencyService_BiDirectionalResiliency
+      responses:
+        "200":
+          description: A successful response.(streaming responses)
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/resiliencyResiliencyResponse'
+              error:
+                $ref: '#/definitions/rpcStatus'
+            title: Stream result of resiliencyResiliencyResponse
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          description: ' (streaming inputs)'
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/resiliencyResiliencyRequest'
+      tags:
+        - ResiliencyService
+  /resiliency.ResiliencyService/ClientStreamingResiliency:
+    post:
+      operationId: ResiliencyService_ClientStreamingResiliency
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/resiliencyResiliencyResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          description: ' (streaming inputs)'
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/resiliencyResiliencyRequest'
+      tags:
+        - ResiliencyService
+  /resiliency.ResiliencyService/ServerStreamingResiliency:
+    post:
+      operationId: ResiliencyService_ServerStreamingResiliency
+      responses:
+        "200":
+          description: A successful response.(streaming responses)
+          schema:
+            type: object
+            properties:
+              result:
+                $ref: '#/definitions/resiliencyResiliencyResponse'
+              error:
+                $ref: '#/definitions/rpcStatus'
+            title: Stream result of resiliencyResiliencyResponse
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/resiliencyResiliencyRequest'
+      tags:
+        - ResiliencyService
+  /resiliency.ResiliencyService/UnaryResiliency:
+    post:
+      operationId: ResiliencyService_UnaryResiliency
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/resiliencyResiliencyResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/resiliencyResiliencyRequest'
+      tags:
+        - ResiliencyService
   /user.UserService/DeleteUser:
     post:
       operationId: UserService_DeleteUser
@@ -705,6 +800,25 @@ definitions:
             "@type": "type.googleapis.com/google.protobuf.Duration",
             "value": "1.212s"
           }
+  resiliencyResiliencyRequest:
+    type: object
+    properties:
+      min_delay_second:
+        type: integer
+        format: int32
+      max_delay_second:
+        type: integer
+        format: int32
+      status_code:
+        type: array
+        items:
+          type: integer
+          format: int64
+  resiliencyResiliencyResponse:
+    type: object
+    properties:
+      dummy_string:
+        type: string
   rpcStatus:
     type: object
     properties:
