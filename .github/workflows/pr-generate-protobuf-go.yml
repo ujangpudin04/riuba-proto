@@ -19,10 +19,6 @@ jobs:
           go-version: "1.21.3" # or latest go version
           check-latest: false
           cache: true
-      # - name: Debug Path
-      #   shell: bash
-      #   run: |
-      #     make validate-paths
       - name: Generate Go Source
         shell: bash
         run: |
